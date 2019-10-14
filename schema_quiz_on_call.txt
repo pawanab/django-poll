@@ -1,0 +1,71 @@
+users
+=======
+	id 	           (CHAR(16), PRI)
+	name 		   (VARCHAR(50))
+	email          (VARCHAR(50))
+	password	   (VARCHAR(60)	
+	phone		   (BIGINT)				
+	created		   (DATETIME)	
+	modified	   (DATETIME)
+
+quiz
+=======
+	id           	    (CHAR(16), PRI)
+	name		    (VARCHAR(30))	
+	category_id	    (INT)
+	question_count  (INT)
+	created		   (DATETIME)	
+	modified	   (DATETIME)
+
+category
+=========
+	id	           (INT)
+	name		   (VARCHAR(50))
+	created		   (DATETIME)	
+	modified	   (DATETIME)
+
+question_answers
+================
+	id                 (INT)
+	quiz_id		   (CHAR(16), FOREIGN)	-Linked to quiz table
+	type_id		   (INT, FOREIGN)	-Linked to question_type table
+	question	   (TEXT)	
+	question_type_id   (INT)
+	option_A           (TEXT)
+	option_B	   (TEXT)
+	option_C	   (TEXT)
+	option_D	   (TEXT) 	
+	answer		   (TEXT) 
+	created		   (DATETIME)	
+	modified	   (DATETIME)
+
+
+
+question_type
+================
+	id		   (INT) 
+	name		   (VARCHAR(30))	
+	created		   (DATETIME)	
+	modified	   (DATETIME)
+
+attempts
+===========
+
+        id                  (INT,PRI,AI)
+        user_id             (CHAR(16),FOREIGN)=>Linked to users
+        quiz_id             (CHAR(16),FOREIGN)=>Linked to quiz
+        category_id         (INT)
+		correct_count		(INT)
+        start_time          (DATETIME)
+        end_time            (DATETIME)
+
+results
+=========
+        id                  (INT,PRI,AI)
+        attempt_id          (INT, FOREIGN) =>Linked to attempts
+        question_id         (INT, FOREIGN) =>Linked to question_answers
+        answer              (TEXT)
+        is_correct          (BOOL)
+        created             (DATETIME)
+        modified            (DATETIME)
+
