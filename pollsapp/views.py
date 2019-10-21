@@ -4,6 +4,7 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
 
 # Create your views here.
 
@@ -17,18 +18,36 @@ class IndexView(generic.ListView):
     # template = loader.get_template('pollsapp/index.html')
     # return HttpResponse(template.render(context, request))
     def get_queryset(self):
-        return Question.objects.order_by('-publish_date')[:5]
+        return Question.objects.filter(
+            publish_date__lte=timezone.now()
+        ).order_by('-publish_date')[:5]
 
 
 class DetailView(generic.DetailView):
-    model = Question
+    """
+        Excludes any questions that aren't published yet.
+    """
     # default <app name>/<model name>_detail.html
     template_name = 'pollsapp/detail.html'
 
+    def get_queryset(self):
+        return Question.objects.filter(
+            publish_date__lte=timezone.now()
+        )
+
 
 class ResultView(generic.DetailView):
-    model = Question
+    '''
+        Excludes any Question what does not have any choice
+        i.e. question must have atleast one choice
+    '''
     template_name = 'pollsapp/result.html'
+
+    def get_queryset(self):
+        return Question.objects.filter(
+            choice__isnull=False).filter(
+                publish_date__lte=timezone.now()
+        )
 
 
 def vote(request, question_id):
